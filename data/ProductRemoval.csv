@@ -1,0 +1,3 @@
+ID,name,method
+removal_fifo,First In First Out (FIFO),fifo
+removal_lifo,Last In First Out (LIFO),lifo

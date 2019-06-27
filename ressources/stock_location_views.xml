@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hexya>
+    <data>
+	<view id="view_location_form" model="StockLocation" >
+            <form string="Stock Location">
+                <div class="oe_button_box" name="button_box">
+                   <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                        <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                    </button>
+                    <button string="Current Stock"
+                            class="oe_stat_button"
+                            icon="fa-building-o" name="%(location_open_quants)d" type="action"
+                            context="{'search_default_internal_loc': 1}"/>
+                    <button string="Products"
+                            class="oe_stat_button"
+                            icon="fa-filter" name="%(act_product_location_open)d" type="action"
+                            context="{'location_id': active_id}"
+                            />
+                </div>
+                <label for="name" class="oe_edit_only"/>
+                <h1><field name="name"/></h1>
+                <label for="location_id" class="oe_edit_only"/>
+                <h2><field name="location_id"/></h2>
+
+                <group>
+                    <group string="Additional Information">
+                        <field name="usage"/>
+                        <field name="partner_id"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        <field name="scrap_location"/>
+                        <field name="return_location"/>
+                    </group>
+                    <group string="Localization" name="localization">
+                        <field name="posx"/>
+                        <field name="posy"/>
+                        <field name="posz"/>
+                        <field name="barcode"/>
+                    </group>
+                    <group string="Logistics" groups="stock.group_adv_location">
+                        <field name="removal_strategy_id" options="{'no_create': True}"/>
+                        <field name="putaway_strategy_id"/>
+                    </group>
+                </group>
+                <field name="comment" placeholder="External note..."/>
+            </form>
+        </view>
+	<view id="view_location_search" model="StockLocation" >
+            <search string="Stock Locations">
+                <field name="name" string="Stock Locations"/>
+                <filter name="in_location" string="Internal" domain="[('usage', '=', 'internal')]" help="Internal Locations"/>
+                <filter name="customer" string="Customer" domain="[('usage', '=', 'customer')]" help="Customer Locations"/>
+                <filter name="supplier" string="Vendor" domain="[('usage', '=', 'supplier')]" help="Vendor Locations"/>
+                <field name="location_id" string="Parent Location"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+            </search>
+        </view>
+	<view id="view_location_tree2" model="StockLocation" >
+            <tree string="Stock Location" decoration-info="usage=='view'" decoration-danger="usage=='internal'">
+                <field name="active" invisible="1"/>
+                <field name="display_name"/>
+                <field name="usage"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </view>
+	<action id="action_location_form" type="ir.actions.act_window" name="Locations" model="StockLocation" view_id="view_location_tree2"></action>
+	<view id="stock_location_path_filter" model="StockLocationPath" >
+                <search string="Search Stock Location Paths">
+                    <filter string="Global" name="route_false" domain="[('route_id','=',False)]" help="If the route is global"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </view>
+	<view id="stock_location_path_tree" model="StockLocationPath" >
+                <tree string="Location Paths">
+                    <field name="location_from_id" />
+                    <field name="location_dest_id" />
+                    <field name="name" />
+                    <field name="active" invisible="1"/>
+                </tree>
+            </view>
+	<view id="stock_location_path_form" model="StockLocationPath" >
+                <form string="Location Paths">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" groups="stock.group_adv_location">
+                            <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="sequence"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Locations">
+                            <field name="location_from_id"/>
+                            <field name="location_dest_id"/>
+                        </group>
+                        <group string="Details">
+                            <field name="auto"/>
+                            <field name="picking_type_id"/>
+                            <field name="company_id" groups="base.group_multi_company" />
+                            <label for="delay" string="Delay"/>
+                            <div>
+                                <field name="delay" class="oe_inline"/>days
+                            </div>
+                        </group>
+                    </group>
+                </form>
+            </view>
+	<action id="stolocpath" type="ir.actions.act_window" name="Push Rules" model="StockLocationPath" >
+	<view id="stock_location_route_tree" model="StockLocationRoute" >
+                <tree string="Routes">
+                    <field name="sequence" widget="handle" />
+                    <field name="name"/>
+                    <field name="active" invisible="1"/>
+                </tree>
+            </view>
+	<view id="stock_location_route_form_view" model="StockLocationRoute" >
+                <form string="Route">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive" groups="stock.group_adv_location">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name"/></h1>
+                        </div>
+                    <group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="sequence" string="Sequence" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                    <separator string="Applicable On"/>
+                    <p class="oe_grey">Select the places where this route can be selected</p>
+                    <group>
+                        <group>
+                            <button name="view_categ_ids" for="product_categ_selectable" type="object" string="Product Categories" class="oe_link"/>
+                            <div>
+                                <field name="product_categ_selectable" class="oe_inline"/>
+                            </div>
+                            <button name="view_product_ids" for="product_selectable" type="object" string="Products" class="oe_link"/>
+                            <div>
+                                <field name="product_selectable" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="warehouse_selectable" string="Warehouses"/>
+                            <field name="warehouse_ids"  widget="many2many_tags" nolabel="1"
+                                   attrs="{'readonly': [('warehouse_selectable', '=', False)]}"/>
+                        </group>
+                    </group>
+                    <group string="Push Rules" colspan="4" >
+                        <field name="push_ids" colspan="4" nolabel="1"/>
+                    </group>
+                    <group string="Procurement Rules" colspan="4" >
+                        <field name="pull_ids" colspan="4" nolabel="1"/>
+                    </group>
+                    </sheet>
+                </form>
+            </view>
+	<view id="stock_location_route_view_search" model="StockLocationRoute" >
+                <search string="Route">
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </view>
+        <action id="action_routes_form" type="ir.actions.act_window" name="Routes" model="StockLocationRoute" view_mode="tree,form" view_id="stock_location_route_tree"></action>
+    </data>
+</hexya>

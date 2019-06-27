@@ -1,0 +1,3 @@
+ID,name,customer,supplier,is_company,active,street,country_id,state_id,zip,city,email,phone,website,parent_id
+res_partner_company_1,My Company, Chicago,,,1,,90 Streets Avenue,,,60610,Chicago,chicago@yourcompany.com,+1 312 349 3030,www.yourcompany.com,
+res_partner_address_41,Steven Hamilton,,,,,,,,,,,,,res_partner_company_1

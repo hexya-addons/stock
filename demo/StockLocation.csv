@@ -1,0 +1,6 @@
+ID,name,location_id,usage
+stock_location_3,IT Vendors,stock_location_suppliers,supplier
+stock_location_4,Big Vendors,stock_location_3,supplier
+stock_location_5,Generic IT Vendors,stock_location_3,supplier
+stock_location_7,European Customers,stock_location_customers,customer
+stock_location_8,Non European Customers,stock_location_customers,customer

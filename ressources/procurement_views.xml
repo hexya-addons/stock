@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hexya>
+    <data>
+	<view id="procurement_group_form_view_herited" model="ProcurementGroup" >
+            <div name="button_box" position="inside">
+                <button name="%(do_view_pickings)d" string="Pickings" type="action"/>
+            </div>
+        </view>
+	<view id="view_procurement_form_stock_inherit" model="ProcurementOrder" >
+                <xpath expr="//group[@name='scheduling']" position="before">
+                    <group>
+                        <field name="warehouse_id"/>
+                        <field name="location_id" domain="[('usage', '=', 'internal')]"/>
+                        <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
+                    </group>
+                </xpath>
+                <div name="button_box" position="inside">
+                    <button name="do_view_pickings" class="oe_stat_button" icon="fa-bars" string="Group's Pickings" type="object"/>
+                </div>
+                <xpath expr="//field[@name='rule_id']" position="replace">
+                    <field name="rule_id" domain="['|', ('location_id', '=', False), ('location_id', '=', location_id)]"/>
+                    <field name="partner_dest_id"/>
+                </xpath>
+            </view>
+	<view id="view_procurement_tree_stock_inherit" model="ProcurementOrder" >
+                <xpath expr="//field[@name='origin']" position="before">
+                    <field name="location_id"/>
+                </xpath>
+            </view>
+	<view id="view_procurement_rule_tree_stock_inherit" model="ProcurementRule" >
+                <xpath expr="//field[@name='action']" position="after">
+                    <field name="picking_type_id"/>
+                </xpath>
+            </view>
+	<view id="view_procurement_rule_form_stock_inherit" model="ProcurementRule" >
+                <xpath expr="//group[@name='general']" position="after">
+                    <group>
+                        <group string="Applied On">
+                            <field name="location_id"/>
+                            <field name="warehouse_id" groups="base.group_no_one"/>
+                        </group>
+                        <group string="Creates">
+                            <field name="location_src_id" attrs="{'required': [('action', '=', 'move')], 'invisible':[('action', '!=', 'move')]}"  domain="[('usage','!=','view')]"/>
+                            <field name="procure_method" groups="stock.group_adv_location" attrs="{'invisible': [('action', '!=', 'move')]}"/>
+                            <field name="picking_type_id" attrs="{'required': [('action', '!=', 'manufacture')]}"/>
+                            <field name="partner_address_id" groups="stock.group_adv_location" context="{'show_address': 1}" options="{'always_reload': 1}" attrs="{'invisible': [('action', '!=', 'move')]}"/>
+                            <label for="delay" string="Delay"  groups="stock.group_adv_location" attrs="{'invisible': [('action', '!=', 'move')]}"/>
+                            <div groups="stock.group_adv_location" attrs="{'invisible': [('action', '!=', 'move')]}">
+                               <field name="delay" class="oe_inline"/>days
+                            </div>
+                        </group>
+                    </group>
+                </xpath>
+                <xpath expr="//field[@name='group_id']" position="after">
+                    <field name="propagate"/>
+                    <field name="propagate_warehouse_id"/>
+                </xpath>
+            </view>
+	<action id="procrules" type="ir.actions.act_window" name="Procurement Rules" model="ProcurementRule" >
+    </data>
+</hexya>

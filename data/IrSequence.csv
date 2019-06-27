@@ -1,0 +1,7 @@
+ID,name,code,prefix,padding,number_next,number_increment,company_id
+sequence_mrp_op,Stock orderpoint,stock.orderpoint,OP/,5,1,1
+sequence_stock_scrap,Scrap,stock.scrap,SP/,5,1,1
+seq_picking_internal,Picking INT,stock.picking,INT/,5,,,
+sequence_production_lots,Serial Numbers,stock.lot.serial,,7,1,1,
+sequence_tracking,Packs,stock.lot.tracking,,7,1,1,
+seq_quant_package,Packages,stock.quant.package,PACK,7,,,

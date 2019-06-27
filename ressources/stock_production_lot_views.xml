@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hexya>
+    <data>
+	<action id="lot_open_quants" type="ir.actions.act_window" name="Quants" model="StockQuant" >
+	<view id="view_production_lot_form" model="StockProductionLot" >
+            <form string="Lots/Serial Numbers">
+                <sheet>
+                <div class="oe_button_box" name="button_box">
+                        <button name="%(lot_open_quants)d" icon="fa-arrows" class="oe_stat_button" string="Locate" type="action" attrs="{'invisible': [('quant_ids','=',[])]}"/>
+                        <button name="action_traceability" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="object" attrs="{'invisible': [('quant_ids','=',[])]}"/>
+                </div>
+                <div class="oe_title">
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" placeholder="e.g. LOT/0001/20121"/>
+                    </h1>
+                </div>
+                <group name="main_group">
+                    <group>
+                        <field name="product_id" attrs="{'readonly':[('quant_ids','!=',[])]}"/>
+                            <label for="product_qty"/>
+                            <div class="o_row">
+                                <field name="product_qty"/>
+                                <field name="product_uom_id" readonly="1" groups="product.group_uom"/>
+                            </div>
+                        <field name="ref"/>
+                    </group>
+                </group>
+                <notebook>
+                    <page string="Products">
+                        <field name="quant_ids">
+                            <tree string="Stock Moves">
+                                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                                <field name="qty"/>
+                            </tree>
+                         </field>
+                    </page>
+                </notebook>
+                </sheet>
+            </form>
+        </view>
+	<view id="view_production_lot_tree" model="StockProductionLot" >
+            <tree string="Lots/Serial Numbers">
+                <field name="name"/>
+                <field name="ref"/>
+                <field name="product_id"/>
+                <field name="create_date"/>
+            </tree>
+        </view>
+	<view id="search_product_lot_filter" model="StockProductionLot" >
+            <search string="Product Lots Filter">
+                <field name="name" string="Product Lots" filter_domain="['|',('name','ilike',self),('ref','ilike',self)]"/>
+                <field name="product_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Product" domain="[]" context="{'group_by':'product_id'}"/>
+                </group>
+            </search>
+        </view>
+	<action id="action_production_lot_form" type="ir.actions.act_window" name="Lots/Serial Numbers" model="StockProductionLot" view_id="view_production_lot_tree"></action>
+    </data>
+</hexya>

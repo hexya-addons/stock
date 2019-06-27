@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hexya>
+    <data>
+	<view id="view_incoterms_tree" model="StockIncoterms" >
+                <tree string="Incoterms">
+                    <field name="active" invisible="1"/>
+                    <field name="code"/>
+                    <field colspan="4" name="name"/>
+                </tree>
+            </view>
+	<view id="stock_incoterms_form" model="StockIncoterms" >
+                <form string="Incoterms">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                        </group>
+                    </sheet>
+                </form>
+            </view>
+	<view id="stock_incoterms_view_search" model="StockIncoterms" >
+                <search string="Incoterms">
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </view>
+	<action id="action_incoterms_tree" type="ir.actions.act_window" name="Incoterms" model="StockIncoterms" view_mode="tree,form" >
+    </data>
+</hexya>

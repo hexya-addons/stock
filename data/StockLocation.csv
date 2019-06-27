@@ -1,0 +1,11 @@
+ID,name,usage,company_id,posz,location_id,scrap_location
+stock_location_locations,Physical Locations,view,,,,
+stock_location_locations_partner,Partner Locations,view,,1,,
+stock_location_locations_virtual,Virtual Locations,view,,1,,
+stock_location_scrapped,Scrapped,inventory,,,stock_location_locations_virtual,True
+location_inventory,Inventory adjustment,inventory,,,stock_location_locations_virtual,
+location_procurement,Procurements,procurement,,,stock_location_locations_virtual,
+location_production,Production,production,,,stock_location_locations_virtual,
+stock_location_suppliers,Vendors,supplier,,,stock_location_locations_partner,
+stock_location_customers,Customers,customer,,,stock_location_locations_partner,
+stock_location_inter_wh,Inter Company Transit,transit,,,stock_location_locations_virtual,

@@ -1,0 +1,5 @@
+ID,product_max_qty,product_min_qty,product_uom,company_id,warehouse_id,location_id,product_id
+stock_warehouse_orderpoint_shop1_cpu1,20.0,10.0,product.product_uom_unit,stock.res_company_1,stock.stock_warehouse_shop0,stock.stock_location_shop0,product.product_product_9
+stock_warehouse_orderpoint_1,10.0,5.0,product.product_uom_unit,,,,product.product_delivery_02
+stock_warehouse_orderpoint_2,12.0,5.0,product.product_uom_unit,,,,product.product_product_20
+stock_warehouse_orderpoint_5,5.0,3.0,product.product_uom_unit,,,,product.product_delivery_01

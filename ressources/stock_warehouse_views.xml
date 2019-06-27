@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hexya>
+    <data>
+	<view id="view_warehouse" model="StockWarehouse" >
+                <form string="Warehouse">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                            <button name="action_view_all_routes"
+                                    string="Routes"
+                                    icon="fa-refresh"
+                                    class="oe_stat_button"
+                                    type="object"/>
+                        </div>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name"/></h1>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                            </group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                <field name="partner_id"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4" groups="stock.group_adv_location">
+                            <page string="Warehouse Configuration" colspan="4">
+                                <group colspan="4">
+                                    <field name="reception_steps" widget='radio'/>
+                                    <field name="delivery_steps" widget='radio'/>
+                                    <field name="default_resupply_wh_id" widget='selection'/>
+                                    <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes'/>
+                                </group>
+                            </page>
+                            <page string="Technical Information" groups='base.group_no_one'>
+                                <group>
+                                    <group string="Locations">
+                                        <field name="wh_input_stock_loc_id" readonly="1"/>
+                                        <field name="wh_qc_stock_loc_id" readonly="1"/>
+                                        <field name="wh_pack_stock_loc_id" readonly="1"/>
+                                        <field name="wh_output_stock_loc_id" readonly="1"/>
+                                    </group>
+                                    <group string="Operation Types">
+                                        <field name="in_type_id" readonly="1"/>
+                                        <field name="int_type_id" readonly="1"/>
+                                        <field name="pick_type_id" readonly="1"/>
+                                        <field name="pack_type_id" readonly="1"/>
+                                        <field name="out_type_id" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </view>
+	<view id="view_warehouse_tree" model="StockWarehouse" >
+                <tree string="Warehouse">
+                    <field name="name"/>
+                    <field name="active" invisible="1"/>
+                    <field name="lot_stock_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="partner_id"/>
+                </tree>
+            </view>
+	<view id="stock_warehouse_view_search" model="StockWarehouse" >
+                <search string="Warehouse">
+                    <field name="name"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                </search>
+            </view>
+	<action id="action_warehouse_form" type="ir.actions.act_window" name="Warehouses" model="StockWarehouse" view_id="view_warehouse_tree"></action>
+	<action id="do_view_procurement_op" type="ir.actions.act_window" name="Procurements" model="ProcurementOrder" view_mode="tree,form" >
+	<view id="view_warehouse_orderpoint_tree" model="StockWarehouseOrderpoint" >
+                <tree string="Reordering Rules">
+                    <field name="name"/>
+                    <field name="active" invisible="1"/>
+                    <field name="warehouse_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="product_id"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
+                    <field name="product_min_qty"/>
+                    <field name="product_max_qty"/>
+                </tree>
+            </view>
+	<view id="warehouse_orderpoint_search" model="StockWarehouseOrderpoint" >
+                <search string="Reordering Rules Search">
+                    <field name="name" string="Reordering Rules"/>
+                    <field name="warehouse_id"/>
+                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="product_id"/>
+                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Warehouse" domain="[]"  context="{'group_by':'warehouse_id'}"/>
+                        <filter string="Location" domain="[]" context="{'group_by':'location_id'}"/>
+                    </group>
+                </search>
+            </view>
+	<view id="view_warehouse_orderpoint_form" model="StockWarehouseOrderpoint" >
+                <form string="Reordering Rules">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
+                            </button>
+                            <button name="%(stock.do_view_procurement_op)d" type="action" string="Procurements" class="oe_stat_button" icon="fa-refresh"/>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="product_id"/>
+                            </group>
+                            <group>
+                                <field name="warehouse_id" widget="selection" groups="stock.group_stock_multi_locations"/>
+                                <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
+                                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                                <field name="group_id" groups="stock.group_adv_location"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Rules">
+                                <field name="product_min_qty" />
+                                <field name="product_max_qty" />
+                                <field name="qty_multiple" string="Quantity Multiple"/>
+                            </group>
+                            <group string="Misc">
+                                <label for="lead_days"/>
+                                <div class="o_row">
+                                    <field name="lead_days"/>
+                                    <field name="lead_type"/>
+                                </div>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </view>
+	<action id="action_orderpoint_form" type="ir.actions.act_window" name="Reordering Rules" model="StockWarehouseOrderpoint" view_id="view_warehouse_orderpoint_tree"></action>
+    </data>
+</hexya>

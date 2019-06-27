@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hexya>
+    <data>
+	<view id="stock_move_tree" model="StockMove" >
+                <tree decoration-muted="state == 'cancel'" string="Moves" create="false">
+                    <field name="product_id"/>
+                    <field name="product_uom_qty"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="product_packaging" domain="[('product_tmpl_id','=',product_tmpl_id)]" groups="product.group_stock_packaging"/>
+                    <field name="picking_id"/>
+                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="create_date" groups="base.group_no_one"/>
+                    <field name="date" string="Date" groups="base.group_no_one"/>
+                    <field name="date_expected" string="Date Expected"/>
+                    <field name="state"/>
+                </tree>
+            </view>
+	<view id="view_move_pivot" model="StockMove" >
+                <pivot string="Stock Moves Analysis">
+                    <field name="product_id" type="row"/>
+                    <field name="location_dest_id" groups="stock.group_stock_multi_locations" type="row"/>
+                    <field name="product_uom_qty" type="measure"/>
+                </pivot>
+            </view>
+	<view id="view_move_graph" model="StockMove" >
+                <graph string="Stock Moves Analysis">
+                    <field name="product_id"/>
+                    <field name="location_dest_id" groups="stock.group_stock_multi_locations" type="row"/>
+                    <field name="product_uom_qty" type="measure"/>
+                </graph>
+            </view>
+	<view id="view_move_tree" model="StockMove" >
+                <tree decoration-muted="state == 'cancel'" decoration-danger="(state not in ('cancel','done')) and date > current_date" string="Moves" create="0">
+                    <field name="name"/>
+                    <field name="picking_id" string="Reference"/>
+                    <field name="origin"/>
+                    <field name="picking_type_id" invisible="1"/>
+                    <field name="create_date" invisible="1" groups="base.group_no_one"/>
+                    <field name="product_id"/>
+                    <field name="product_uom_qty"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="location_dest_id" groups="stock.group_stock_multi_locations"/>
+                    <field name="date" groups="base.group_no_one"/>
+                    <field name="date_expected" invisible="context.get('scrap_move')"/>  <!-- TDE FIXME: woooooo -->
+                    <field name="state"/>
+                </tree>
+            </view>
+	<view id="view_move_picking_tree" model="StockMove" >
+                <tree decoration-muted="scrapped == True" string="Stock Moves" editable="bottom">
+                    <field name="product_id"/>
+                    <field name="name" invisible="1"/>
+                    <field name="product_uom_qty"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="location_id" invisible="1"/>
+                    <field name="create_date" invisible="1" />
+                    <field name="date_expected" invisible="1" />
+                    <field name="picking_type_id" invisible="1"/>
+                    <field name="scrapped" invisible="1"/>
+                    <field name="availability" invisible="1"/>
+                    <field name="reserved_availability" invisible="1"/>
+                    <field name="location_dest_id" invisible="1"/>
+                    <field name="remaining_qty" invisible="1"/>
+                    <field name="state"/>
+                </tree>
+            </view>
+	<view id="view_move_form" model="StockMove" >
+                <form string="Stock Moves">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" />
+                </header>
+                <sheet>
+                    <group>
+                        <group name="main_grp" colspan="2">
+                            <group name="main_grp_col1">
+                                <field name="product_id"/>
+                                <label for="product_uom_qty"/>
+                                <div class="o_row">
+                                    <field name="product_uom_qty"/>
+                                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" groups="product.group_uom"/>
+                                </div>
+                                <field name="name"/>
+                            </group>
+                            <group name="main_grp_col2">
+                                <field name="picking_type_id"/>
+                                <field name="priority"/>
+                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                <field name="date_expected" attrs="{'invisible': [('state', '=', 'done')]}"/>
+                                <field name="date" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                            </group>
+                        </group>
+                        <group name="origin_grp" string="Origin">
+                            <field name="origin"/>
+                            <field name="location_id" groups="stock.group_stock_multi_locations"/>
+                            <field name="picking_id" domain="[('picking_type_id','=',picking_type_id)]"/>
+                            <field name="create_date" groups="base.group_no_one"/>
+                            <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="stock.group_adv_location"/>
+                            <field name="group_id"/>
+                        </group>
+                        <group name="destination_grp" string="Destination" groups="stock.group_stock_multi_locations">
+                            <field name="location_dest_id" />
+                            <field name="partner_id" context="{'contact_display':'partner'}" />
+                            <field name="picking_partner_id" context="{'contact_display':'partner'}"/>
+                            <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
+                        </group>
+                        <group name="quants_grp" string="Reserved Quants" colspan="2" groups="base.group_no_one" attrs="{'invisible': [('state', '=', 'done')]}">
+                            <field name="string_availability_info"/>
+                        </group>
+                        <group name="moved_quants_grp" string="Moved Quants" colspan="4" groups="base.group_no_one" attrs="{'invisible': [('state', '!=', 'done')]}">
+                            <field name="quant_ids" readonly="1" nolabel="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                </form>
+            </view>
+	<view id="view_move_picking_form" model="StockMove" >
+                <form string="Stock Moves">
+                <header>
+                        <field name="state" widget="statusbar"/>
+                </header>
+                <field name="scrapped" invisible="1"/>
+                <group>
+                    <group string="#Products">
+                        <field name="product_id"/>
+                        <field name="picking_type_id" invisible="1"/>
+                        <field name="group_id" invisible="1"/>
+                        <label for="product_uom_qty"/>
+                        <div>
+                            <field name="product_uom_qty"/>
+                            <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
+                        </div>
+                        <field name="product_tmpl_id" invisible="1"/>
+                    </group>
+                    <group string="Locations" groups="base.group_no_one">
+                        <field name="name"/>
+                        <field name="location_id"/>
+                        <field name="location_dest_id"/>
+                    </group>
+                </group>
+                <group>
+                    <group string="Conditions">
+                       <field name="procure_method" attrs="{'readonly': [('state', '!=', 'draft')]}" groups="stock.group_adv_location"/>
+                        <field name="create_date" invisible="1"/>
+                        <field name="date_expected"/>
+                        <field name="move_dest_id" groups="base.group_no_one" readonly="1"/>
+                    </group>
+                    <group name="quants_grp" string="Reserved" attrs="{'invisible': [('state', '=', 'draft')]}">
+                        <field name="string_availability_info"/>
+                    </group>
+                    <group name="moved_quants_grp" string="Moved Quants" colspan="4" groups="base.group_no_one" attrs="{'invisible': [('state', '!=', 'done')]}">
+                        <field name="quant_ids" readonly="1" nolabel="1"/>
+                    </group>
+                </group>
+                </form>
+            </view>
+	<view id="view_move_search" model="StockMove" >
+                <search string="Stock Moves">
+                    <field name="origin" filter_domain="['|', '|', ('origin', 'ilike', self), ('name', 'ilike', self), ('picking_id', 'ilike', self)]" string="Reference"/>
+                    <field name="date" groups="base.group_no_one"/>
+
+                    <filter string="Ready" name="ready" domain="[('state','=','assigned')]" help="Stock moves that are Available (Ready to process)"/>
+                    <filter string="To Do" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
+                    <filter string="Done" name="done" domain="[('state','=','done')]" help="Stock moves that have been processed"/>
+                    <separator/>
+                    <filter string="Today" domain="[('date','&lt;=', datetime.datetime.combine(context_today(), datetime.time(23,59,59))), ('date','&gt;=', datetime.datetime.combine(context_today(), datetime.time(0,0,0)))]" help="Orders processed Today or planned for Today"/>
+                    <field name="product_id"/>
+                    <field name="name" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
+                    <field name="partner_id" string="Partner"  filter_domain="[('picking_id.partner_id','child_of',self)]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Product" name="by_product" domain="[]"  context="{'group_by':'product_id'}"/>
+                        <filter string="Picking" name="groupby_picking_id" domain="[]"  context="{'group_by':'picking_id'}"/>
+                        <filter string="Source" name="groupby_location_id" domain="[]" context="{'group_by':'location_id'}" groups="stock.group_stock_multi_locations"/>
+                        <filter string="Destination" name="groupby_dest_location_id" domain="[]" context="{'group_by':'location_dest_id'}" groups="stock.group_stock_multi_locations"/>
+                        <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Creation" name="groupby_create_date" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                        <filter string="Scheduled" name="groupby_date" domain="[]" context="{'group_by':'date_expected'}"/>
+                    </group>
+                </search>
+            </view>
+	<action id="act_product_stock_move_open" type="ir.actions.act_window" name="Moves" model="StockMove" view_id="stock.view_move_tree"></action>
+	<action id="stock_move_action" type="ir.actions.act_window" name="Stock Moves" model="StockMove" view_id="view_move_tree"></action>
+	<view id="action_stock_move_tree_all" type="ir.actions.act_window.view" view_mode="tree" view_id="view_move_tree"></view>
+	<view id="action_stock_move_form_all" type="ir.actions.act_window.view" view_mode="form" view_id="view_move_form"></view>
+	<view id="action_stock_move_pivot_all" type="ir.actions.act_window.view" view_mode="pivot" view_id="view_move_pivot"></view>
+	<view id="action_stock_move_graph_all" type="ir.actions.act_window.view" view_mode="graph" view_id="view_move_graph"></view>
+	<view id="view_move_tree_receipt_picking" model="StockMove" >
+                <tree decoration-muted="state == 'cancel'" default_order='date_expected, picking_id, sequence' string="Moves">
+                    <field name="date_expected" widget='date'/>
+                    <field name="date" widget="date"/>
+                    <field name="picking_id" string="Reference" invisible="1"/>
+                    <field name="sequence" invisible="1"/>
+                    <field name="origin"/>
+                    <field name="product_id"/>
+                    <field name="product_uom_qty"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="location_id" invisible="1"/>
+                    <field name="location_dest_id" invisible="1"/>
+                    <field name="create_date" invisible="1"/>
+                    <field name="state"/>
+                </tree>
+            </view>
+	<view id="view_move_tree_receipt_picking_board" model="StockMove" >
+                <tree string="Moves">
+                    <field name="picking_id" string="Reference"/>
+                    <field name="product_id"/>
+                    <field name="product_uom_qty"/>
+                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
+                    <field name="date" groups="base.group_no_one"/>
+                </tree>
+            </view>
+        <action id="action_receipt_picking_move" type="ir.actions.act_window" name="Incoming  Products" model="StockMove" view_mode="tree,form" view_id="view_move_tree_receipt_picking"></action>
+    </data>
+</hexya>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hexya>
+    <data>
+	<view id="view_procurement_compute_wizard" model="ProcurementOrderpointCompute" >
+            <form string="Parameters">
+                <group>
+                    <label string="Wizard checks all the stock minimum rules and generate procurement order."/>
+                </group>
+                <footer>
+                    <button name="procure_calculation" string="Compute Stock" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </view>
+	<action id="action_procurement_compute" type="ir.actions.act_window" name="Run Reordering Rules" model="ProcurementOrderpointCompute" view_mode="form" >
+    </data>
+</hexya>

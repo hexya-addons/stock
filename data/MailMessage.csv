@@ -1,0 +1,3 @@
+ID,model,res_id,message_type,subtype_id,subject,body
+module_install_notification,mail.channel,mail.channel_all_employees,notification,mail.mt_comment,Inventory Management application installed!,<![CDATA[<p>Manage your product inventory and stock locations: you can control stock moves history and planning,
+watch your stock valuation, and track production lots (based on serial numbers).</p>]]>

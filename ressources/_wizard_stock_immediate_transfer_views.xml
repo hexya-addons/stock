@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<hexya>
+    <data>
+	<view id="view_immediate_transfer" model="StockImmediateTransfer" >
+            <form string="Immediate transfer?">
+                <group>
+                    <p>
+                        You haven't set processed (<i>done</i>) quantities. Click <i>apply</i> and
+                        Odoo will process all quantities to do.
+                    </p>
+                </group>
+                <footer>
+                    <button name="process" string="_Apply" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </view>
+    </data>
+</hexya>

@@ -1,0 +1,5 @@
+ID,name,barcode_nomenclature_id,sequence,type,encoding,pattern
+barcode_rule_weight_three_dec,Weight Barcodes 3 Decimals,barcodes.default_barcode_nomenclature,36,weight,ean13,21.....{NNDDD}
+barcode_rule_package,Package barcodes,barcodes.default_barcode_nomenclature,70,package,any,PACK
+barcode_rule_lot,Lot barcodes,barcodes.default_barcode_nomenclature,80,lot,any,10
+barcode_rule_location,Location barcodes,barcodes.default_barcode_nomenclature,60,location,any,414

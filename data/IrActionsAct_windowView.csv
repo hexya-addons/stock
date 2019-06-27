@@ -1,0 +1,5 @@
+ID,sequence,view_mode,view_id,act_window_id
+action_stock_move_tree_all,,tree,view_move_tree,stock_move_action
+action_stock_move_form_all,,form,view_move_form,stock_move_action
+action_stock_move_pivot_all,,pivot,view_move_pivot,stock_move_action
+action_stock_move_graph_all,,graph,view_move_graph,stock_move_action

@@ -1,0 +1,2 @@
+ID,currency_id,partner_id,parent_id,name
+res_company_1,base.USD,res_partner_company_1,base.main_company,My Company, Chicago
